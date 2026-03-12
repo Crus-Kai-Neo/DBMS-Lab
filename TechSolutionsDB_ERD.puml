@@ -1,0 +1,43 @@
+@startuml TechSolutionsDB_ERD
+
+skinparam linetype ortho
+
+entity DEPARTMENT {
+    * DeptID : INT <<PK>>
+    --
+    * DeptName : VARCHAR(50)
+    Location : VARCHAR(50)
+}
+
+entity EMPLOYEE {
+    * EmpID : INT <<PK>>
+    --
+    FirstName : VARCHAR(50)
+    LastName : VARCHAR(50)
+    Gender : CHAR(1)
+    Salary : REAL
+    HireDate : DATE
+    DeptID : INT <<FK>>
+}
+
+entity PROJECT {
+    * ProjectID : INT <<PK>>
+    --
+    ProjectName : VARCHAR(50)
+    StartDate : DATE
+    EndDate : DATE
+    Budget : REAL
+}
+
+entity WORKS_ON {
+    * EmpID : INT <<PK, FK>>
+    * ProjectID : INT <<PK, FK>>
+    --
+    HoursWorked : INT
+}
+
+DEPARTMENT ||--o{ EMPLOYEE : "employs"
+EMPLOYEE ||--o{ WORKS_ON : "works on"
+PROJECT ||--o{ WORKS_ON : "assigned to"
+
+@enduml
