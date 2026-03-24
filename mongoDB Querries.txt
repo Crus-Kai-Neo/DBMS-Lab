@@ -1,0 +1,116 @@
+Microsoft Windows [Version 10.0.26200.8037]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\user>mongosh "mongodb+srv://mongodb.phlraqy.mongodb.net/" --apiVersion 1 --username swodeshsingh_db_user
+Enter password: ****************
+Current Mongosh Log ID: 69c1ee5b6fd1feac0e114029
+Connecting to:          mongodb+srv://<credentials>@mongodb.phlraqy.mongodb.net/?appName=mongosh+2.8.1
+Using MongoDB:          8.0.20 (API Version 1)
+Using Mongosh:          2.8.1
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+Atlas atlas-l0ijiz-shard-0 [primary] test> db.students.find.pretty()
+TypeError: db.students.find.pretty is not a function
+Atlas atlas-l0ijiz-shard-0 [primary] test> db.students.find().pretty()
+
+Atlas atlas-l0ijiz-shard-0 [primary] test> db.students.insertMany([{name: "Swodesh"},{age: 19},{grade: "A"},{name: "Crash"},{age: 19},{grade: "B"}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69c1f14e6fd1feac0e11402a'),
+    '1': ObjectId('69c1f14e6fd1feac0e11402b'),
+    '2': ObjectId('69c1f14e6fd1feac0e11402c'),
+    '3': ObjectId('69c1f14e6fd1feac0e11402d'),
+    '4': ObjectId('69c1f14e6fd1feac0e11402e'),
+    '5': ObjectId('69c1f14e6fd1feac0e11402f')
+  }
+}
+Atlas atlas-l0ijiz-shard-0 [primary] test> show dbs
+sample_mflix  135.00 MiB
+test           40.00 KiB
+admin         348.00 KiB
+local           5.77 GiB
+Atlas atlas-l0ijiz-shard-0 [primary] test> db.students.find().pretty()
+[
+  { _id: ObjectId('69c1f14e6fd1feac0e11402a'), name: 'Swodesh' },
+  { _id: ObjectId('69c1f14e6fd1feac0e11402b'), age: 19 },
+  { _id: ObjectId('69c1f14e6fd1feac0e11402c'), grade: 'A' },
+  { _id: ObjectId('69c1f14e6fd1feac0e11402d'), name: 'Crash' },
+  { _id: ObjectId('69c1f14e6fd1feac0e11402e'), age: 19 },
+  { _id: ObjectId('69c1f14e6fd1feac0e11402f'), grade: 'B' }
+]
+Atlas atlas-l0ijiz-shard-0 [primary] test> db.students.find({age: {$gt: 16}})
+[
+  { _id: ObjectId('69c1f14e6fd1feac0e11402b'), age: 19 },
+  { _id: ObjectId('69c1f14e6fd1feac0e11402e'), age: 19 }
+]
+Atlas atlas-l0ijiz-shard-0 [primary] test> db.students.find({grade:"A"}).pretty()
+[ { _id: ObjectId('69c1f14e6fd1feac0e11402c'), grade: 'A' } ]
+Atlas atlas-l0ijiz-shard-0 [primary] test> db.students.fins({name: "Swodesh"}).pretty()
+TypeError: db.students.fins is not a function
+Atlas atlas-l0ijiz-shard-0 [primary] test> db.students.find({name: "Swodesh"}).pretty()
+[ { _id: ObjectId('69c1f14e6fd1feac0e11402a'), name: 'Swodesh' } ]
+Atlas atlas-l0ijiz-shard-0 [primary] test> db.students.updateOne({name: "Crash"},{name: "Mohammed Abdul"},{age: 22},{grade:"D"})
+MongoInvalidArgumentError: Update document requires atomic operators
+Atlas atlas-l0ijiz-shard-0 [primary] test> db.students.updateOne({name: "Crash"},{set: {grade:"D"}})
+MongoInvalidArgumentError: Update document requires atomic operators
+Atlas atlas-l0ijiz-shard-0 [primary] test> db.students.updateOne({name: "Crash"},{$set: {grade:"D"}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+Atlas atlas-l0ijiz-shard-0 [primary] test> db.students.updateMany({age: {$lt: 20}},{$set:{grade:"B"}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 2,
+  modifiedCount: 2,
+  upsertedCount: 0
+}
+Atlas atlas-l0ijiz-shard-0 [primary] test> db.students.deleteOne({name: "Crash"})
+{ acknowledged: true, deletedCount: 1 }
+Atlas atlas-l0ijiz-shard-0 [primary] test> db.students.countDocuments()
+5
+Atlas atlas-l0ijiz-shard-0 [primary] test> db.students.countDocuments({grade: "A"})
+1
+Atlas atlas-l0ijiz-shard-0 [primary] test> db.students.find().sort().pretty()
+[
+  { _id: ObjectId('69c1f14e6fd1feac0e11402a'), name: 'Swodesh' },
+  { _id: ObjectId('69c1f14e6fd1feac0e11402b'), age: 19, grade: 'B' },
+  { _id: ObjectId('69c1f14e6fd1feac0e11402c'), grade: 'A' },
+  { _id: ObjectId('69c1f14e6fd1feac0e11402e'), age: 19, grade: 'B' },
+  { _id: ObjectId('69c1f14e6fd1feac0e11402f'), grade: 'B' }
+]
+Atlas atlas-l0ijiz-shard-0 [primary] test> students.updateMany({},{$set: city: "Kathmandu"})
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:34)
+
+> 1 | students.updateMany({},{$set: city: "Kathmandu"})
+    |                                   ^
+  2 |
+
+Atlas atlas-l0ijiz-shard-0 [primary] test> students.updateMany({},{$set: city: {"Kathmandu"}})
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:34)
+
+> 1 | students.updateMany({},{$set: city: {"Kathmandu"}})
+    |                                   ^
+  2 |
+
+Atlas atlas-l0ijiz-shard-0 [primary] test> students.updateMany({},{$set: {city: "Kathmandu"}})
+ReferenceError: students is not defined
+Atlas atlas-l0ijiz-shard-0 [primary] test> db.students.updateMany({},{$set: {city: "Kathmandu"}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 5,
+  modifiedCount: 5,
+  upsertedCount: 0
+}
+Atlas atlas-l0ijiz-shard-0 [primary] test> db.students.deleteOne({age: {$gt:21}})
+{ acknowledged: true, deletedCount: 0 }
+Atlas atlas-l0ijiz-shard-0 [primary] test>
