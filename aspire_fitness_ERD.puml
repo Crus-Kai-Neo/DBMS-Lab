@@ -1,0 +1,116 @@
+@startuml aspire_fitness_ERD
+
+skinparam linetype ortho
+
+entity MEMBER {
+    * member_id : INT <<PK, AUTO_INCREMENT>>
+    --
+    * first_name : VARCHAR(50)
+    * surname : VARCHAR(50)
+    address : VARCHAR(255)
+    telephone_number : VARCHAR(15)
+    email_address : VARCHAR(100) <<UNIQUE>>
+    * date_of_birth : DATE
+    medical_conditions : TEXT
+    * membership_start_date : DATE
+    membership_end_date : DATE
+    membership_status : ENUM('ACTIVE','INACTIVE','SUSPENDED')
+    weekly_subscription : DECIMAL(5,2)
+    created_at : TIMESTAMP
+    updated_at : TIMESTAMP
+}
+
+entity STAFF {
+    * staff_id : INT <<PK, AUTO_INCREMENT>>
+    --
+    * first_name : VARCHAR(50)
+    * surname : VARCHAR(50)
+    * role : ENUM('Personal Trainer','Class Instructor','Gym Staff','Manager','Administration')
+    contact_phone_number : VARCHAR(15)
+    * employment_start_date : DATE
+    employment_end_date : DATE
+    staff_status : ENUM('ACTIVE','INACTIVE')
+    created_at : TIMESTAMP
+    updated_at : TIMESTAMP
+}
+
+entity FACILITY {
+    * facility_id : INT <<PK, AUTO_INCREMENT>>
+    --
+    * facility_name : VARCHAR(100) <<UNIQUE>>
+    * maximum_capacity : INT
+    facility_description : TEXT
+    available_for_hire : BOOLEAN
+    created_at : TIMESTAMP
+    updated_at : TIMESTAMP
+}
+
+entity CLASS {
+    * class_id : INT <<PK, AUTO_INCREMENT>>
+    --
+    * class_name : VARCHAR(100)
+    * instructor_id : INT <<FK>>
+    * day_of_week : ENUM('Monday',...,'Sunday')
+    * start_time : TIME
+    * end_time : TIME
+    * maximum_class_size : INT
+    class_description : TEXT
+    is_recurring : BOOLEAN
+    created_at : TIMESTAMP
+    updated_at : TIMESTAMP
+}
+
+entity CLASS_BOOKING {
+    * booking_id : INT <<PK, AUTO_INCREMENT>>
+    --
+    * member_id : INT <<FK>>
+    * class_id : INT <<FK>>
+    * booking_date : DATE
+    booking_status : ENUM('CONFIRMED','CANCELLED','WAITLIST')
+    is_paid : BOOLEAN
+    booking_fee : DECIMAL(5,2)
+    booking_week : INT <<GENERATED>>
+    created_at : TIMESTAMP
+    updated_at : TIMESTAMP
+}
+
+entity FACILITY_BOOKING {
+    * facility_booking_id : INT <<PK, AUTO_INCREMENT>>
+    --
+    * member_id : INT <<FK>>
+    * facility_id : INT <<FK>>
+    * booking_date : DATE
+    * start_time : TIME
+    * end_time : TIME
+    * activity_name : VARCHAR(100)
+    booking_status : ENUM('CONFIRMED','CANCELLED')
+    * number_of_attendees : INT
+    booking_week : INT <<GENERATED>>
+    created_at : TIMESTAMP
+    updated_at : TIMESTAMP
+}
+
+entity PAYMENT {
+    * payment_id : INT <<PK, AUTO_INCREMENT>>
+    --
+    * member_id : INT <<FK>>
+    * payment_amount : DECIMAL(8,2)
+    payment_date : TIMESTAMP
+    * payment_type : ENUM('WEEKLY_SUBSCRIPTION','EXTRA_CLASS','OTHER')
+    * payment_method : ENUM('CASH','CARD','STANDING_ORDER')
+    payment_status : ENUM('PENDING','COMPLETED','FAILED')
+    related_class_booking_id : INT <<FK>>
+    receipt_number : VARCHAR(50) <<UNIQUE>>
+    created_at : TIMESTAMP
+    updated_at : TIMESTAMP
+}
+
+STAFF ||--o{ CLASS : "instructs"
+MEMBER ||--o{ CLASS_BOOKING : "books"
+CLASS ||--o{ CLASS_BOOKING : "has bookings"
+MEMBER ||--o{ FACILITY_BOOKING : "books"
+FACILITY ||--o{ FACILITY_BOOKING : "has bookings"
+MEMBER ||--o{ PAYMENT : "makes"
+CLASS_BOOKING ||--o| PAYMENT : "paid via"
+
+@enduml
